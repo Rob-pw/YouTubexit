@@ -163,17 +163,15 @@ async function persist() {
       }
     },
      "payment":{  
-        "fiat":"USD",
-        "scale":"1000:1",
-        "maxdisc":30,
-        "promoter":15,
-        "retailer":15,
-        "sugTip":[  
-
-        ],
-        "addresses":[  
-
-        ]
+        fiat:"USD",
+        scale:"1000:1",
+        maxdisc:30,
+        promoter:15,
+        retailer:15,
+        tip: {
+          suggested: []
+        },
+        addresses: []
      }
   })::formArtifact('oip-041');
   console.log('artifact', JSON.stringify(oipArtifact));
