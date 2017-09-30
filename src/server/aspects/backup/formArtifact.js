@@ -6,7 +6,7 @@ export default function form(version) {
   const artifactData = artifact::makeArtifact(timestamp);
   const infoData = this::makeInfo();
   const storageData = artifact::makeStorage();
-  const paymentData = payment ? payment::makePayment() : {};
+  const paymentData = payment ? payment : {};//payment ? payment::makePayment() : {};
 
   const header = {
     signature: artifact::makeSignature(timestamp)
@@ -34,9 +34,7 @@ function makePayment() {
     fiat: fiat,
     scale: scale,
     sugTip: tip.suggested,
-    tokens: {
-      ...addresses
-    }
+    addresses: [...addresses]
   };
 }
 

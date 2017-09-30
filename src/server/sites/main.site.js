@@ -162,15 +162,13 @@ async function persist() {
         distributor: uploader
       }
     },
-     "payment":{  
+     payment:{  
         fiat:"USD",
         scale:"1000:1",
         maxdisc:30,
         promoter:15,
         retailer:15,
-        tip: {
-          suggested: []
-        },
+        sugTip: [],
         addresses: []
      }
   })::formArtifact('oip-041');
