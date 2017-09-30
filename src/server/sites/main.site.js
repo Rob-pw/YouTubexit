@@ -64,7 +64,7 @@ async function formRawArtifact() {
     title,
     description: description + '.:. Uploaded via YouTubeExit.com | Saving the world\'s videos one watch at a time.',
     year: 2017,
-    type: 'video',
+    type: 'Video-Basic',
     publisher: {
       address: publisherAddress
     },
@@ -130,7 +130,8 @@ async function persist() {
       display: 'thumbnail',
       file: thumbnailFileName
     },
-    type: 'coverart'
+    type: 'Image',
+    subtype: 'thumbnail'
   }, {
     names: {
       display: title,
@@ -138,7 +139,7 @@ async function persist() {
     },
     size: size,
     duration: +duration,
-    type: 'video'
+    type: 'Video'
   }];
 
   console.log('artifactFiles', artifactFiles);

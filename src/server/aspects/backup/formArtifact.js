@@ -96,7 +96,9 @@ function makeFile(file) {
     retail: cut.retail
   };
 
-  if (['video', 'audio'].includes(file.type)) fileData.duration = file.duration;
+  if (['Video', 'Audio'].includes(file.type)) fileData.duration = file.duration;
+  if (file.subtype) fileData.subtype = file.subtype;
+
   if (permissions) Object.keys(permissions).forEach(
     disallow => !disallow && fileData[`disallow${disallow}`]);
 
