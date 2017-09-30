@@ -62,6 +62,7 @@ async function formRawArtifact() {
 
   const artifact = {
     title,
+    genre: 'Film & Animation',
     description: description + '.:. Uploaded via YouTubeExit.com | Saving the world\'s videos one watch at a time.',
     year: 2017,
     type: 'Video-Basic',
@@ -160,7 +161,20 @@ async function persist() {
         artist: uploader,
         distributor: uploader
       }
-    }
+    },
+     "payment":{  
+        "fiat":"USD",
+        "scale":"1000:1",
+        "maxdisc":30,
+        "promoter":15,
+        "retailer":15,
+        "sugTip":[  
+
+        ],
+        "addresses":[  
+
+        ]
+     }
   })::formArtifact('oip-041');
   console.log('artifact', JSON.stringify(oipArtifact));
 
