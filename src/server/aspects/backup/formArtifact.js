@@ -12,13 +12,15 @@ export default function form(version) {
     signature: artifact::makeSignature(timestamp)
   };
 
+  console.log(payment);
+
   const result = {
     'oip-041': 'oip-041' === version && {
       artifact: {
         ...artifactData,
         info: infoData,
         storage: storageData,
-        payment: paymentData
+        payment: payment
       },
       ...header
     }
