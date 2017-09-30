@@ -84,7 +84,7 @@ async function formRawArtifact() {
 async function $getThumbnail(thumbnailUrl) {
   const response = await fetch(thumbnailUrl);
 
-  return response.body;
+  return response.buffer();
 }
 
 const getFileName = (title, ext) => `${title.split(' ').join('%20')}.${ext}`;
@@ -131,7 +131,8 @@ async function persist() {
       file: thumbnailFileName
     },
     type: 'Image',
-    subtype: 'thumbnail'
+    subtype: 'thumbnail',
+    size: $thumbnail.length
   }, {
     names: {
       display: title,
