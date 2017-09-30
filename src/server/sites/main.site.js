@@ -140,7 +140,6 @@ async function persist() {
       file: videoFileName
     },
     size: size,
-    duration: +duration,
     type: 'Video'
   }];
 
