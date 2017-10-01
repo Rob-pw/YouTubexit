@@ -10,6 +10,11 @@ import formArtifact from '../aspects/backup/formArtifact';
 import florinCoinRpcConfig from './florin.config';
 
 const oip = new Oip041(florinCoinRpcConfig);
+const { host, port, username: user, password: pass } = florinCoinRpcConfig;
+const florinApi = new litecoin.Client({
+  host, port,
+  user, pass
+});
 
 function asyncWrap(arg) {
   const func = this;
@@ -55,11 +60,6 @@ async function formRawArtifact() {
     }
   };
 
-  const { host, port, username: user, password: pass } = florinCoinRpcConfig;
-  const florinApi = new litecoin.Client({
-    host, port,
-    user, pass
-  });
   const publisherAddress = await ::florinApi.getAccountAddress::asyncWrap('youtubexit');
 
   const artifact = {
