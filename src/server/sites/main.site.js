@@ -273,17 +273,24 @@ exports.register = (server, options, next) => {
     path: '/publisher/register',
     config: {
       handler: (async (request, reply) => {
-        const address = await ::florinApi.getAccountAddress::asyncWrap('youtubexit');
+        try {
+          const address = await ::florinApi.getAccountAddress::asyncWrap('youtubexit');
 
-        const response = await ::oip.announcePublisher::asyncWrap({
-          'oip-publisher': {
-            name: 'YouTubexit',
-            address: address,
-            emailmd5: 'bfdc056c7bd69f1bc6b3bb3ca49abb44'
-          }
-        });
+          console.log(address);
 
-        console.log(response);
+          const response = await ::oip.announcePublisher::asyncWrap({
+            'oip-publisher': {
+              name: 'YouTubexit',
+              address: address,
+              emailmd5: 'bfdc056c7bd69f1bc6b3bb3ca49abb44'
+            }
+          });
+
+          console.log(response);
+        } catch (ex) {
+          console.log(ex);
+        }
+
       })
     }
   });
