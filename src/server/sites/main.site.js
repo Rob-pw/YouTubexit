@@ -9,6 +9,8 @@ import * as ipfs from '../aspects/backup/ipfs';
 import formArtifact from '../aspects/backup/formArtifact';
 import florinCoinRpcConfig from './florin.config';
 
+const oip = new Oip041(florinCoinRpcConfig);
+
 function asyncWrap(arg) {
   const func = this;
 
@@ -140,7 +142,8 @@ async function persist() {
       file: videoFileName
     },
     size: size,
-    type: 'Video'
+    type: 'Video',
+    subtype: '4k'
   }];
 
   console.log('artifactFiles', artifactFiles);
@@ -184,7 +187,6 @@ async function persist() {
 
 function publish() {
   const oipArtifact = this;
-  const oip = new Oip041(florinCoinRpcConfig);
 
   return new Promise((resolve, reject) => {
     oip.publishArtifact(oipArtifact, response => {
@@ -263,6 +265,26 @@ exports.register = (server, options, next) => {
     path: '/watch',
     config: {
       handler: mediaRouteHandler
+    }
+  });
+
+  server.route({
+    method: 'GET',
+    path: '/publisher/register',
+    config: {
+      handler: (async (request, reply) => {
+        const address = await ::florinApi.getAccountAddress::asyncWrap('youtubexit');
+
+        const response = await ::oip.announcePublisher::asyncWrap({
+          'oip-publisher': {
+            name: 'YouTubexit',
+            address: address,
+            emailmd5: 'bfdc056c7bd69f1bc6b3bb3ca49abb44'
+          }
+        });
+
+        console.log(response);
+      })
     }
   });
 
