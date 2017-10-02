@@ -16,11 +16,12 @@ const florinApi = new litecoin.Client({
   user, pass
 });
 
-function asyncWrap(arg) {
+function asyncWrap() {
   const func = this;
+  const args = [...arguments];
 
   return new Promise((resolve, reject) => {
-    func.call(null, arg, (err, value) => {
+    func.apply(null, args, (err, value) => {
       if (!err) resolve(value);
       else reject(err);
     });
@@ -160,7 +161,7 @@ async function persist() {
     artifact: {
       ...rawArtifact,
       people: {
-        artist: uploader,
+        artist: 'YouTubexit',
         distributor: uploader
       }
     },
@@ -275,16 +276,27 @@ exports.register = (server, options, next) => {
       handler: (async (request, reply) => {
         try {
           const address = await ::florinApi.getAccountAddress::asyncWrap('youtubexit');
+          const timestamp = (new Date().getTime() / 1000) | 0;
+          const publisherMessage = {
+            name: 'YouTubexit',
+            address: address,
+            timestamp: timestamp
+          };
 
-          console.log(address);
-
-          const response = await ::oip.announcePublisher::asyncWrap({
-            'oip-publisher': {
-              name: 'YouTubexit',
-              address: address,
-              emailmd5: 'bfdc056c7bd69f1bc6b3bb3ca49abb44'
-            }
+          const { message: signature } = await ::oip.announcePublisher::asyncWrap({
+            ...publisherMessage
           });
+
+          console.log('signature', signature);
+
+          oip.sendToBlockChain({
+            'alexandria-publisher': {
+              ...publisherMessage,
+              bitmessage: '',
+              email: ''  
+            },
+            signature: signature
+          }, );
 
           console.log(response);
         } catch (ex) {
