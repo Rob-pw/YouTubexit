@@ -275,10 +275,10 @@ exports.register = (server, options, next) => {
     config: {
       handler: (async (request, reply) => {
         try {
+          console.log('publisher/register');
           const address = await ::florinApi.getAccountAddress::asyncWrap('youtubexit');
           const timestamp = (new Date().getTime() / 1000) | 0;
-
-          console.log('publisher/register', address, timestamp);
+          console.log(address, timestamp);
 
           const publisherMessage = {
             name: 'YouTubexit',
