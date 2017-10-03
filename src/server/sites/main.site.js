@@ -277,28 +277,30 @@ exports.register = (server, options, next) => {
         try {
           const address = await ::florinApi.getAccountAddress::asyncWrap('youtubexit');
           const timestamp = (new Date().getTime() / 1000) | 0;
+
+          console.log('publisher/register', address, timestamp);
+
           const publisherMessage = {
             name: 'YouTubexit',
             address: address,
             timestamp: timestamp
           };
 
-          const { message: signature } = await ::oip.announcePublisher::asyncWrap({
-            ...publisherMessage
-          });
+          const { message: signature } = await ::oip.announcePublisher::asyncWrap(publisherMessage);
 
           console.log('signature', signature);
 
-          oip.sendToBlockChain({
+          const response = await ::oip.sendToBlockChain()::asyncWrap({
             'alexandria-publisher': {
               ...publisherMessage,
               bitmessage: '',
               email: ''  
             },
             signature: signature
-          }, );
+          });
 
-          console.log(response);
+          console.log('response', response);
+          reply(response);
         } catch (ex) {
           console.log(ex);
         }
