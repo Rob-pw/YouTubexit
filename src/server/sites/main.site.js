@@ -64,7 +64,7 @@ async function formRawArtifact() {
     }
   };
 
-  const publisherAddress = await ::florinApi.getAccountAddress::asyncWrap('youtubexit');
+  const [publisherAddress] = await ::florinApi.getAccountAddress::asyncWrap('youtubexit');
 
   const artifact = {
     title,
