@@ -279,7 +279,7 @@ exports.register = (server, options, next) => {
       handler: (async (request, reply) => {
         try {
           console.log('publisher/register');
-          const address = await ::florinApi.getAccountAddress::asyncWrap('youtubexit');
+          const [address] = await ::florinApi.getAccountAddress::asyncWrap('youtubexit');
           const timestamp = (new Date().getTime() / 1000) | 0;
           console.log(address, timestamp);
 
