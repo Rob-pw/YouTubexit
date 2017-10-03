@@ -21,10 +21,13 @@ function asyncWrap() {
   const args = [...arguments];
 
   return new Promise((resolve, reject) => {
-    func.apply(null, args, (err, value) => {
-      if (!err) resolve(value);
+    func.apply(null, [...args, function () {
+      const args = [...arguments];
+      const err = args.shift();
+
+      if (!err) resolve(args);
       else reject(err);
-    });
+    }]);
   });
 }
 
@@ -286,7 +289,11 @@ exports.register = (server, options, next) => {
             timestamp: timestamp
           };
 
-          const { message: signature } = await ::oip.announcePublisher::asyncWrap(publisherMessage);
+          const { message: signature } = await ::oip.announcePublisher::asyncWrap({
+            'oip-publisher': {
+              ...publisherMessage
+            }
+          });
 
           console.log('signature', signature);
 
@@ -294,10 +301,10 @@ exports.register = (server, options, next) => {
             'alexandria-publisher': {
               ...publisherMessage,
               bitmessage: '',
-              email: ''  
+              email: ''
             },
             signature: signature
-          });
+          }, address);
 
           console.log('response', response);
           reply(response);
