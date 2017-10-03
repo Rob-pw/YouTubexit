@@ -289,15 +289,11 @@ exports.register = (server, options, next) => {
             timestamp: timestamp
           };
 
-          const { message: signature } = await ::oip.announcePublisher::asyncWrap({
-            'oip-publisher': {
-              ...publisherMessage
-            }
-          });
+          const signature = await oip.signPublisher(publisherMessage);
 
           console.log('signature', signature);
 
-          const response = await ::oip.sendToBlockChain()::asyncWrap({
+          const response = await oip.sendToBlockChain({
             'alexandria-publisher': {
               ...publisherMessage,
               bitmessage: '',
