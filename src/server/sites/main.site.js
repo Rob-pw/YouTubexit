@@ -181,23 +181,13 @@ async function persist() {
   console.log('artifact', JSON.stringify(oipArtifact));
 
   try {
-    const response = await oipArtifact::publish();
+    const response = await oip.publishArtifact(oipArtifact);
     
-    console.log(response);
+    console.log('response', response);
   } catch (ex) {
     console.error('Something went wrong with OIP', ex);
+    throw ex;
   }
-}
-
-function publish() {
-  const oipArtifact = this;
-
-  return new Promise((resolve, reject) => {
-    oip.publishArtifact(oipArtifact, response => {
-      if (response.success) resolve(response);
-      else reject(response);
-    });
-  });
 }
 
 function parseDuration(duration) {
