@@ -158,9 +158,10 @@ async function persist() {
   let publisherAddress = store.get(publisherKey);
   
   if (!publisherAddress) {
-    publisherAddress = await ::florinApi.getNewAddress::asyncWrap('youtubexit');
-    await registerPublisher(publisherAddress);
-    store.set(publisherKey, publisherAddress);
+    const [newAddress] = await ::florinApi.getNewAddress::asyncWrap('youtubexit');
+    await registerPublisher(newAddress);
+    store.set(publisherKey, newAddress);
+    publisherAddress = newAddress;
     console.log('registered!', uploader, publisherAddress);
   }
 
