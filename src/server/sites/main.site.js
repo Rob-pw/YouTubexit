@@ -8,6 +8,7 @@ import * as downloader from '../aspects/backup/downloader';
 import * as ipfs from '../aspects/backup/ipfs';
 import formArtifact from '../aspects/backup/formArtifact';
 import florinCoinRpcConfig from './florin.config';
+import SimpleJsonStore from 'simple-json-store';
 
 const oip = new Oip041(florinCoinRpcConfig);
 const { host, port, username: user, password: pass } = florinCoinRpcConfig;
