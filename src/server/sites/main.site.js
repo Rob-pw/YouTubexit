@@ -16,6 +16,8 @@ const florinApi = new litecoin.Client({
   user, pass
 });
 
+const store = new SimpleJsonStore('/test.json');
+
 function asyncWrap() {
   const func = this;
   const args = [...arguments];
@@ -41,6 +43,7 @@ const getClientVideo = (formats)  => formats
 
 async function formRawArtifact() {
   const { 
+    publisherAddress,
     ipfsResult: { rootDirectoryPath, results },
     details,
     artifactFiles } = this;
@@ -63,8 +66,6 @@ async function formRawArtifact() {
       retail: 0
     }
   };
-
-  const [publisherAddress] = await ::florinApi.getAccountAddress::asyncWrap('youtubexit');
 
   const artifact = {
     title,
@@ -152,7 +153,18 @@ async function persist() {
 
   console.log('artifactFiles', artifactFiles);
 
+  const publisherKey = `publishers[${uploader}].address`;
+  let publisherAddress = store.get(publisherKey);
+  
+  if (!publisherAddress) {
+    publisherAddress = await ::florinApi.getNewAddress::asyncWrap('youtubexit');
+    await registerPublisher(publisherAddress);
+    store.set(publisherKey, publisherAddress);
+    console.log('registered!', uploader, publisherAddress);
+  }
+
   const rawArtifact = await {
+    publisherAddress,
     ipfsResult,
     artifactFiles,
     details
@@ -164,8 +176,8 @@ async function persist() {
     artifact: {
       ...rawArtifact,
       people: {
-        artist: 'YouTubexit',
-        distributor: uploader
+        artist: uploader,
+        distributor: 'YouTubexit'
       }
     },
      payment:{  
@@ -268,31 +280,7 @@ exports.register = (server, options, next) => {
     config: {
       handler: (async (request, reply) => {
         try {
-          console.log('publisher/register');
-          const [address] = await ::florinApi.getAccountAddress::asyncWrap('youtubexit');
-          const timestamp = (new Date().getTime() / 1000) | 0;
-          console.log(address, timestamp);
-
-          const publisherMessage = {
-            name: 'YouTubexit',
-            address: address,
-            timestamp: timestamp
-          };
-
-          const signature = await oip.signPublisher(publisherMessage);
-
-          console.log('signature', signature);
-
-          const response = await oip.sendToBlockChain({
-            'alexandria-publisher': {
-              ...publisherMessage,
-              bitmessage: '',
-              email: ''
-            },
-            signature: signature
-          }, address);
-
-          console.log('response', response);
+          
           reply(response);
         } catch (ex) {
           console.log(ex);
@@ -316,5 +304,30 @@ exports.register = (server, options, next) => {
 
   next();
 };
+
+async function registerPublisher(address) {
+  const timestamp = (new Date().getTime() / 1000) | 0;
+
+  const publisherMessage = {
+    name: 'YouTubexit',
+    address: address,
+    timestamp: timestamp
+  };
+
+  const signature = await oip.signPublisher(publisherMessage);
+
+  console.log('signature', signature);
+
+  const response = await oip.sendToBlockChain({
+    'alexandria-publisher': {
+      ...publisherMessage,
+      bitmessage: '',
+      email: ''
+    },
+    signature: signature
+  }, address);
+
+  console.log('response', response);
+}
 
 exports.register.attributes = { name: 'main' };
